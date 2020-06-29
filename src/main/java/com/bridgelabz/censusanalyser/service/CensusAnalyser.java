@@ -37,8 +37,9 @@ public class CensusAnalyser {
             int numberOfEateries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
             return numberOfEateries;
         } catch (IOException e) {
-            throw new CensusAnalyserException(e.getMessage(),
-                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, "There is some issue related to the file");
+        } catch (RuntimeException e){
+            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.DELIMITER_ISSUE, "might be some error related to delimiter");
         }
     }
 }

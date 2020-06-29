@@ -9,7 +9,6 @@ public class CensusAnalyserException extends Exception {
     public enum ExceptionType {
         CENSUS_FILE_PROBLEM,
         DELIMITER_ISSUE,
-        INCORRECT_DATA_ISSUE
     }
     public ExceptionType type;
 
@@ -18,8 +17,13 @@ public class CensusAnalyserException extends Exception {
      * @param message
      * @param type
      */
-    public CensusAnalyserException(String message, ExceptionType type) {
+    public CensusAnalyserException(ExceptionType type, String message) {
         super(message);
+        this.type = type;
+    }
+
+    public CensusAnalyserException(String message, ExceptionType type, Throwable cause) {
+        super(message, cause);
         this.type = type;
     }
 }
