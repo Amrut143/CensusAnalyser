@@ -3,6 +3,7 @@ package com.bridgelabz.censusanalyser.service;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.model.IndiaStateCensusCSV;
 import com.bridgelabz.censusanalyser.model.IndiaStateCodeCSV;
+import com.bridgelabz.censusanalyser.utility.OpenCSVBuilder;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
@@ -19,6 +20,7 @@ import java.util.stream.StreamSupport;
  */
 public class CensusAnalyser {
 
+    OpenCSVBuilder openCSVBuilder = new OpenCSVBuilder();
     /**
      * Function to load the india census data from csv file
      * @param censusCsvFilePath
@@ -29,7 +31,7 @@ public class CensusAnalyser {
         try(Reader reader = Files.newBufferedReader(Paths.get(censusCsvFilePath))) {
 
             /*Using stream and lambda expresions to iterate the csv data*/
-            Iterator<IndiaStateCensusCSV> censusCSVIterator = this.getCSVFileIterator(reader, IndiaStateCensusCSV.class);
+            Iterator<IndiaStateCensusCSV> censusCSVIterator = openCSVBuilder.getCSVFileIterator(reader, IndiaStateCensusCSV.class);
             return this.getCount(censusCSVIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, "There is some issue related to the file");
@@ -39,7 +41,7 @@ public class CensusAnalyser {
     }
 
     /**
-     * Function to load india state code data frpm csv file
+     * Function to load india state code data from csv file
      * @param stateCodeCsvFilePath
      * @return
      * @throws CensusAnalyserException
@@ -48,32 +50,12 @@ public class CensusAnalyser {
         try(Reader reader = Files.newBufferedReader(Paths.get(stateCodeCsvFilePath))) {
 
             /*Using stream and lambda expresions to iterate the csv data*/
-            Iterator<IndiaStateCodeCSV> stateCodeCSVIterator = this.getCSVFileIterator(reader, IndiaStateCodeCSV.class);
+            Iterator<IndiaStateCodeCSV> stateCodeCSVIterator = openCSVBuilder.getCSVFileIterator(reader, IndiaStateCodeCSV.class);
             return this.getCount(stateCodeCSVIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, "There is some issue related to the file");
         } catch (RuntimeException e){
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, "might be some error related to delimiter");
-        }
-    }
-
-    /**
-     * Function to iterate the csv data one by one
-     * @param reader
-     * @param csvClass
-     * @param <T>
-     * @return
-     * @throws CensusAnalyserException
-     */
-    private <T> Iterator<T> getCSVFileIterator(Reader reader, Class csvClass) throws CensusAnalyserException {
-        try {
-            CsvToBeanBuilder<T> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-            csvToBeanBuilder.withType(csvClass);
-            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-            CsvToBean<T> csvToBean = csvToBeanBuilder.build();
-            return csvToBean.iterator();
-        } catch (IllegalStateException e) {
-            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE, e.getMessage());
         }
     }
 
