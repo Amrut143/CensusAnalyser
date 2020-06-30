@@ -16,6 +16,15 @@ public class CensusAnalyserException extends Exception {
     /**
      *
      * @param message
+     * @param name
+     */
+    public CensusAnalyserException(String message, String name) {
+        super(message);
+        this.type = ExceptionType.valueOf(name);
+    }
+    /**
+     *
+     * @param message
      * @param type
      */
     public CensusAnalyserException(ExceptionType type, String message) {
