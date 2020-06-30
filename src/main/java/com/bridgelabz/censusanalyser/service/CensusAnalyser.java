@@ -20,7 +20,7 @@ import java.util.stream.StreamSupport;
 public class CensusAnalyser {
 
     /**
-     *
+     * Function to load the india census data from csv file
      * @param censusCsvFilePath
      * @return
      * @throws CensusAnalyserException
@@ -30,9 +30,7 @@ public class CensusAnalyser {
 
             /*Using stream and lambda expresions to iterate the csv data*/
             Iterator<IndiaStateCensusCSV> censusCSVIterator = this.getCSVFileIterator(reader, IndiaStateCensusCSV.class);
-            Iterable<IndiaStateCensusCSV> csvIterable = () -> censusCSVIterator;
-            int numberOfEateries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
-            return numberOfEateries;
+            return this.getCount(censusCSVIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, "There is some issue related to the file");
         } catch (RuntimeException e){
@@ -41,7 +39,7 @@ public class CensusAnalyser {
     }
 
     /**
-     *
+     * Function to load india state code data frpm csv file
      * @param stateCodeCsvFilePath
      * @return
      * @throws CensusAnalyserException
@@ -51,9 +49,7 @@ public class CensusAnalyser {
 
             /*Using stream and lambda expresions to iterate the csv data*/
             Iterator<IndiaStateCodeCSV> stateCodeCSVIterator = this.getCSVFileIterator(reader, IndiaStateCodeCSV.class);
-            Iterable<IndiaStateCodeCSV> csvIterable = () -> stateCodeCSVIterator;
-            int numberOfStateCode = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
-            return numberOfStateCode;
+            return this.getCount(stateCodeCSVIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, "There is some issue related to the file");
         } catch (RuntimeException e){
@@ -62,7 +58,7 @@ public class CensusAnalyser {
     }
 
     /**
-     *
+     * Function to iterate the csv data one by one
      * @param reader
      * @param csvClass
      * @param <T>
@@ -79,6 +75,18 @@ public class CensusAnalyser {
         } catch (IllegalStateException e) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE, e.getMessage());
         }
+    }
+
+    /**
+     * Function to count the number of entries
+     * @param iterator
+     * @param <T>
+     * @return
+     */
+    private <T> int getCount(Iterator<T> iterator) {
+        Iterable<T> csvIterable = () -> iterator;
+        int numberOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
+        return numberOfEntries;
     }
 }
 
