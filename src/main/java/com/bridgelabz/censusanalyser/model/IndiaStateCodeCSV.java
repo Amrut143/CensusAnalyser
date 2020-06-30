@@ -11,13 +11,13 @@ public class IndiaStateCodeCSV {
     @CsvBindByName(column = "SrNo", required = true)
     public String srNo;
 
-    @CsvBindByName(column = "stateName")
+    @CsvBindByName(column = "StateName", required = true)
     public String stateName;
 
     @CsvBindByName(column = "TIN", required = true)
     public int tin;
 
-    @CsvBindByName(column = "StateCode")
+    @CsvBindByName(column = "StateCode", required = true)
     public String stateCode;
 
     @Override

@@ -8,7 +8,8 @@ public class CensusAnalyserException extends Exception {
 
     public enum ExceptionType {
         CENSUS_FILE_PROBLEM,
-        CSV_FILE_INTERNAL_ISSUE
+        CSV_FILE_INTERNAL_ISSUE,
+        UNABLE_TO_PARSE
     }
     public ExceptionType type;
 
