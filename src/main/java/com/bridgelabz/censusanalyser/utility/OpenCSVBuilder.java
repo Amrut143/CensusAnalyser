@@ -8,8 +8,17 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.Reader;
 import java.util.Iterator;
 
-public class OpenCSVBuilder {
-        public <T> Iterator<T> getCSVFileIterator(Reader reader, Class<T> csvClass) throws CensusAnalyserException {
+public class OpenCSVBuilder<T> implements ICSVBuilder {
+
+    /**
+     * Function to iterate data from csv file
+     * @param reader
+     * @param csvClass
+     * @param <T>
+     * @return
+     * @throws CensusAnalyserException
+     */
+        public Iterator<T> getCSVFileIterator(Reader reader, Class csvClass) throws CensusAnalyserException {
             try {
                 CsvToBeanBuilder<T> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
                 csvToBeanBuilder.withType(csvClass);

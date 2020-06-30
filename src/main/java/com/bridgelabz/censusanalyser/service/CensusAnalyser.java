@@ -3,6 +3,8 @@ package com.bridgelabz.censusanalyser.service;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.model.IndiaStateCensusCSV;
 import com.bridgelabz.censusanalyser.model.IndiaStateCodeCSV;
+import com.bridgelabz.censusanalyser.utility.CSVBuilderFactory;
+import com.bridgelabz.censusanalyser.utility.ICSVBuilder;
 import com.bridgelabz.censusanalyser.utility.OpenCSVBuilder;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -20,7 +22,6 @@ import java.util.stream.StreamSupport;
  */
 public class CensusAnalyser {
 
-    OpenCSVBuilder openCSVBuilder = new OpenCSVBuilder();
     /**
      * Function to load the india census data from csv file
      * @param censusCsvFilePath
@@ -31,7 +32,8 @@ public class CensusAnalyser {
         try(Reader reader = Files.newBufferedReader(Paths.get(censusCsvFilePath))) {
 
             /*Using stream and lambda expresions to iterate the csv data*/
-            Iterator<IndiaStateCensusCSV> censusCSVIterator = openCSVBuilder.getCSVFileIterator(reader, IndiaStateCensusCSV.class);
+            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            Iterator<IndiaStateCensusCSV> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, IndiaStateCensusCSV.class);
             return this.getCount(censusCSVIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, "There is some issue related to the file");
@@ -50,7 +52,8 @@ public class CensusAnalyser {
         try(Reader reader = Files.newBufferedReader(Paths.get(stateCodeCsvFilePath))) {
 
             /*Using stream and lambda expresions to iterate the csv data*/
-            Iterator<IndiaStateCodeCSV> stateCodeCSVIterator = openCSVBuilder.getCSVFileIterator(reader, IndiaStateCodeCSV.class);
+            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            Iterator<IndiaStateCodeCSV> stateCodeCSVIterator = csvBuilder.getCSVFileIterator(reader, IndiaStateCodeCSV.class);
             return this.getCount(stateCodeCSVIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, "There is some issue related to the file");
