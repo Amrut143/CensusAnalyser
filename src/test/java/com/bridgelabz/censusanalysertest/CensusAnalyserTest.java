@@ -2,6 +2,7 @@ package com.bridgelabz.censusanalysertest;
 
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.model.IndiaStateCensusCSV;
+import com.bridgelabz.censusanalyser.model.IndiaStateCodeCSV;
 import com.bridgelabz.censusanalyser.service.CensusAnalyser;
 import com.google.gson.Gson;
 import org.junit.Assert;
@@ -146,10 +147,23 @@ public class CensusAnalyserTest {
     public void givenIndianCensusData_WhenSortedOnStateWrong_ShouldReturnWrongSortedResult() {
         String sortedCensusData = null;
         try {
-            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
             sortedCensusData = censusAnalyser.getStateWiseSortedCensusData(INDIA_CENSUS_CSV_FILE_PATH);
             IndiaStateCensusCSV[] censusCSV = new Gson().fromJson(sortedCensusData, IndiaStateCensusCSV[].class);
             Assert.assertNotEquals("Goa",censusCSV[0].state);
+        } catch (CensusAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenIndianStateCode_WhenSortedOnStateCode_ShouldReturnSortedResult() {
+        String sortedStateCodeData = null;
+        try {
+            censusAnalyser.loadIndiaStateCode(INDIA_STATE_CODE_CSV_PATH);
+            sortedStateCodeData = censusAnalyser.getStateCodeWiseSortedData(INDIA_CENSUS_CSV_FILE_PATH);
+            IndiaStateCodeCSV[] stateCodeCSV = new Gson().fromJson(sortedStateCodeData, IndiaStateCodeCSV[].class);
+            Assert.assertEquals("AN",stateCodeCSV[0].stateCode);
         } catch (CensusAnalyserException e) {
             e.printStackTrace();
         }
