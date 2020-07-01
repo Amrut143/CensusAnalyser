@@ -112,5 +112,15 @@ public class CensusAnalyser<T> {
         String sortedCensusData = new Gson().toJson(censusCsvFileList);
         return sortedCensusData;
     }
+
+    public String getPopulationDensityWiseSortedCensusData(String csvFilePath) throws CensusAnalyserException {
+        loadIndiaCensusData(csvFilePath);
+        if (censusCsvFileList == null || censusCsvFileList.size() == 0) {
+            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "NO_CENSUS_DATA");
+        }
+        censusCsvFileList.sort((census1, census2) -> census2.densityPerSqKm.compareTo(census1.densityPerSqKm));
+        String sortedCensusData = new Gson().toJson(censusCsvFileList);
+        return sortedCensusData;
+    }
 }
 
