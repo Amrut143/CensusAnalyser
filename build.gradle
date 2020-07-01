@@ -16,6 +16,5 @@ dependencies {
 dependencies {
     compile "com.opencsv:opencsv:4.0"
     compile fileTree(dir: 'libs', include: ['*.jar'])
-
 }
 

@@ -1,17 +1,18 @@
 package com.bridgelabz.censusanalyser.service;
 
-import com.bridgelabz.opencsvbuilder.CSVBuilderException;
+import com.bridgelabz.opencsvbuilder.exceptions.CSVBuilderException;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.model.IndiaStateCensusCSV;
 import com.bridgelabz.censusanalyser.model.IndiaStateCodeCSV;
-import com.bridgelabz.opencsvbuilder.CSVBuilderFactory;
-import com.bridgelabz.opencsvbuilder.ICSVBuilder;
+import com.bridgelabz.opencsvbuilder.service.CSVBuilderFactory;
+import com.bridgelabz.opencsvbuilder.service.ICSVBuilder;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 /**
@@ -31,8 +32,8 @@ public class CensusAnalyser {
 
             /*Using stream and lambda expresions to iterate the csv data*/
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<IndiaStateCensusCSV> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, IndiaStateCensusCSV.class);
-            return this.getCount(censusCSVIterator);
+            List<IndiaStateCensusCSV> censusCSVList = csvBuilder.getCSVFileList(reader, IndiaStateCensusCSV.class);
+            return censusCSVList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, "There is some issue related to the file");
         } catch (RuntimeException e){
