@@ -12,11 +12,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 /**
  * @Author : Amrut
@@ -104,6 +101,16 @@ public class CensusAnalyser<T> {
                                 (census1, census2) -> census2.stateCode.compareTo(census1.stateCode)).reversed());
         String sortedStateCodeData = new Gson().toJson(stateCodeCsvList);
         return sortedStateCodeData;
+    }
+
+    public String getPopulationWiseSortedCensusData(String csvFilePath) throws CensusAnalyserException {
+        loadIndiaCensusData(csvFilePath);
+        if (censusCsvFileList == null || censusCsvFileList.size() == 0) {
+            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "NO_CENSUS_DATA");
+        }
+        censusCsvFileList.sort((census1, census2) -> census2.population.compareTo(census1.population));
+        String sortedCensusData = new Gson().toJson(censusCsvFileList);
+        return sortedCensusData;
     }
 }
 
