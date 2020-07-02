@@ -3,6 +3,7 @@ package com.bridgelabz.censusanalysertest;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.model.IndiaStateCensusCSV;
 import com.bridgelabz.censusanalyser.model.IndiaStateCodeCSV;
+import com.bridgelabz.censusanalyser.model.USCensusCSV;
 import com.bridgelabz.censusanalyser.service.CensusAnalyser;
 import com.google.gson.Gson;
 import org.junit.Assert;
@@ -235,5 +236,18 @@ public class CensusAnalyserTest {
             int numOfRecords = censusAnalyser.loadIndiaCensusData(US_CSV_FILE_PATH);
             Assert.assertEquals(51,numOfRecords);
         } catch (CensusAnalyserException e) { }
+    }
+
+    @Test
+    public void givenUSCensusData_WhenSortedOnPopulation_ShouldReturnFirstPopulatedState_First() {
+        String sortedCensusData = null;
+        try {
+            censusAnalyser.loadUSCensusData(US_CSV_FILE_PATH);
+            sortedCensusData = censusAnalyser.getPopulationWiseSortedCensusDataForUS(US_CSV_FILE_PATH);
+            USCensusCSV[] censusCSV = new Gson().fromJson(sortedCensusData, USCensusCSV[].class);
+            Assert.assertEquals(37253956, censusCSV[censusCSV.length - 1].population);
+        } catch (CensusAnalyserException e) {
+            e.printStackTrace();
+        }
     }
 }

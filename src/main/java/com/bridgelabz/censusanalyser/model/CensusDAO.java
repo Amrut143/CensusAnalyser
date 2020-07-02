@@ -16,7 +16,7 @@ public class CensusDAO {
 
     public CensusDAO(USCensusCSV next) {
         state = next.State;
-        population = next.Population;
+        population = next.population;
         totalArea = next.totalArea;
         populationDensity = next.populationDensity;
         stateCode = next.StateId;
