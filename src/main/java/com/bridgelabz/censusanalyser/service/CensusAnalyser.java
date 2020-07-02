@@ -64,10 +64,18 @@ public class CensusAnalyser<T> {
      * @throws CensusAnalyserException
      */
     public int loadIndiaStateCode(String stateCodeCsvFilePath) throws CensusAnalyserException {
+        int count = 0;
         try (Reader reader = Files.newBufferedReader(Paths.get(stateCodeCsvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<IndiaStateCodeCSV> stateCodeCsvIterator = csvBuilder.getCSVFileIterator(reader, IndiaStateCodeCSV.class);
-            return getCount(stateCodeCsvIterator);
+            Iterator<IndiaStateCodeCSV> stateCodeCSVIterator = csvBuilder.getCSVFileIterator(reader, IndiaStateCodeCSV.class);
+            while (stateCodeCSVIterator.hasNext()){
+                count++;
+                IndiaStateCodeCSV indiaStateCodeCSV = stateCodeCSVIterator.next();
+                IndiaCensusDAO indiaCensusDAO = csvFileMap.get(indiaStateCodeCSV.stateName);
+                if(indiaCensusDAO == null) continue;
+                indiaCensusDAO.stateCode = indiaStateCodeCSV.stateCode;
+            }
+            return count;
         } catch (IOException e) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, "There is some issue related to the file");
         } catch (RuntimeException e) {
@@ -75,12 +83,6 @@ public class CensusAnalyser<T> {
         } catch (CSVBuilderException e) {
             throw new CensusAnalyserException(e.getMessage(), e.type.name());
         }
-    }
-
-    private <E> int getCount(Iterator<E> iterator) {
-        Iterable<E> iterable = () -> iterator;
-        int namOfEateries = (int) StreamSupport.stream(iterable.spliterator(), false).count();
-        return namOfEateries;
     }
 
     /**
@@ -105,6 +107,10 @@ public class CensusAnalyser<T> {
      * @throws CensusAnalyserException
      */
     public String getStateCodeWiseSortedData(String csvFilePath) throws CensusAnalyserException {
+        loadIndiaStateCode(csvFilePath);
+        if (stateCodeCsvList == null || stateCodeCsvList.size() == 0) {
+            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "NO_CENSUS_DATA");
+        }
         loadIndiaStateCode(csvFilePath);
         stateCodeCsvList.sort(((Comparator<IndiaStateCodeCSV>)
                                 (census1, census2) -> census2.stateCode.compareTo(census1.stateCode)).reversed());
