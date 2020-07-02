@@ -250,4 +250,17 @@ public class CensusAnalyserTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenUSCensusData_WhenSortedOnState_ShouldReturnSortedResult() {
+        String sortedCensusData = null;
+        try {
+            censusAnalyser.loadUSCensusData(US_CSV_FILE_PATH);
+            sortedCensusData = censusAnalyser.getStateWiseSortedCensusDataForUS(US_CSV_FILE_PATH);
+            USCensusCSV[] censusCSV = new Gson().fromJson(sortedCensusData, USCensusCSV[].class);
+            Assert.assertEquals("Wyoming", censusCSV[censusCSV.length - 1].state);
+        } catch (CensusAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
 }
