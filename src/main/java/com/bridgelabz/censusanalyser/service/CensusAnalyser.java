@@ -64,18 +64,14 @@ public class CensusAnalyser<T> {
      * @throws CensusAnalyserException
      */
     public int loadIndiaStateCode(String stateCodeCsvFilePath) throws CensusAnalyserException {
-        int count = 0;
         try (Reader reader = Files.newBufferedReader(Paths.get(stateCodeCsvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             Iterator<IndiaStateCodeCSV> stateCodeCSVIterator = csvBuilder.getCSVFileIterator(reader, IndiaStateCodeCSV.class);
-            while (stateCodeCSVIterator.hasNext()){
-                count++;
-                IndiaStateCodeCSV indiaStateCodeCSV = stateCodeCSVIterator.next();
-                IndiaCensusDAO indiaCensusDAO = csvFileMap.get(indiaStateCodeCSV.stateName);
-                if(indiaCensusDAO == null) continue;
-                indiaCensusDAO.stateCode = indiaStateCodeCSV.stateCode;
-            }
-            return count;
+            Iterable<IndiaStateCodeCSV> csvIterable = () -> stateCodeCSVIterator;
+            StreamSupport.stream(csvIterable.spliterator(), false)
+                    .filter(csvState -> csvFileMap.get(csvState.stateName) != null)
+                    .forEach(csvState -> csvFileMap.get(csvState.stateName).state = csvState.stateCode);
+            return csvFileMap.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, "There is some issue related to the file");
         } catch (RuntimeException e) {
