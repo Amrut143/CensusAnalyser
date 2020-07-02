@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+
 /**
  * @Author : Amrut
  * Purpose : Read the indian state census data from csv file
@@ -108,7 +110,8 @@ public class CensusAnalyser<T> {
         if (censusCsvFileList == null || censusCsvFileList.size() == 0) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "NO_CENSUS_DATA");
         }
-        censusCsvFileList.sort((census1, census2) -> census2.population.compareTo(census1.population));
+        Comparator<IndiaStateCensusCSV> censusComparator = Comparator.comparing(census -> census.population);
+        censusCsvFileList.sort(censusComparator);
         String sortedCensusData = new Gson().toJson(censusCsvFileList);
         return sortedCensusData;
     }
@@ -118,7 +121,8 @@ public class CensusAnalyser<T> {
         if (censusCsvFileList == null || censusCsvFileList.size() == 0) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "NO_CENSUS_DATA");
         }
-        censusCsvFileList.sort((census1, census2) -> census2.densityPerSqKm.compareTo(census1.densityPerSqKm));
+        Comparator<IndiaStateCensusCSV> censusComparator = Comparator.comparing(census -> census.densityPerSqKm);
+        censusCsvFileList.sort(censusComparator);
         String sortedCensusData = new Gson().toJson(censusCsvFileList);
         return sortedCensusData;
     }
@@ -128,7 +132,8 @@ public class CensusAnalyser<T> {
         if (censusCsvFileList == null || censusCsvFileList.size() == 0) {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "NO_CENSUS_DATA");
         }
-        censusCsvFileList.sort((census1, census2) -> census2.areaInSqKm.compareTo(census1.areaInSqKm));
+        Comparator<IndiaStateCensusCSV> censusComparator = Comparator.comparing(census -> census.areaInSqKm);
+        censusCsvFileList.sort(censusComparator);
         String sortedCensusData = new Gson().toJson(censusCsvFileList);
         return sortedCensusData;
     }
