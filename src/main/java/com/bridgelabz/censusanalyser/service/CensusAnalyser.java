@@ -212,5 +212,17 @@ public class CensusAnalyser<T> {
         String sortedCensusData = new Gson().toJson(censusDAOList);
         return sortedCensusData;
     }
+
+    public String getDensityWiseSortedCensusDataForUS(String usCsvFilePath) throws CensusAnalyserException {
+        loadUSCensusData(usCsvFilePath);
+        if (csvFileMap == null || csvFileMap.size() == 0) {
+            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "NO_CENSUS_DATA");
+        }
+        Comparator<CensusDAO> censusComparator = Comparator.comparing(census -> census.populationDensity);
+        censusDAOList = csvFileMap.values().stream().collect(Collectors.toList());
+        censusDAOList.sort(censusComparator);
+        String sortedCensusData = new Gson().toJson(censusDAOList);
+        return sortedCensusData;
+    }
 }
 
