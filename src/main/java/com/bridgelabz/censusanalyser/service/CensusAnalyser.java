@@ -68,12 +68,11 @@ public class CensusAnalyser {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             Iterator<E> csvIterator = csvBuilder.getCSVFileIterator(reader, censusCSVClass);
             Iterable<E> censusCSVIterable = () -> csvIterator;
-            String className = censusCSVClass.getSimpleName();
-            if (className.equals("IndiaStateCensusCSV")) {
+            if (censusCSVClass.getSimpleName().equals("IndiaStateCensusCSV")) {
                 StreamSupport.stream(censusCSVIterable.spliterator(), false)
                         .map(IndiaStateCensusCSV.class::cast)
                         .forEach(censusCSV -> this.csvFileMap.put(censusCSV.state, new CensusDAO(censusCSV)));
-            } else if (className.equals("USCensusCSV")){
+            } else if (censusCSVClass.getSimpleName().equals("USCensusCSV")){
                 StreamSupport.stream(censusCSVIterable.spliterator(), false)
                         .map(USCensusCSV.class::cast)
                         .forEach(censusCSV -> this.csvFileMap.put(censusCSV.state, new CensusDAO(censusCSV)));
@@ -244,6 +243,19 @@ public class CensusAnalyser {
         censusDAOList.sort(censusComparator);
         String sortedCensusData = new Gson().toJson(censusDAOList);
         return sortedCensusData;
+    }
+
+    public String getHighestPopulationDensityStateFromIndiaAndUS(String indiaCsvFilePath, String usCsvFilePath)
+            throws CensusAnalyserException
+    {
+        this.loadIndiaCensusData(indiaCsvFilePath);
+        CensusDAO[] indiaCensusList = new Gson().fromJson(this.getPopulationDensityWiseSortedCensusData(indiaCsvFilePath), CensusDAO[].class);
+        this.loadUSCensusData(usCsvFilePath);
+        CensusDAO[] usCensusList = new Gson().fromJson(this.getDensityWiseSortedCensusDataForUS(usCsvFilePath), CensusDAO[].class);
+        if (Double.compare(indiaCensusList[indiaCensusList.length - 1].populationDensity, usCensusList[usCensusList.length - 1].populationDensity) > 0)
+            return indiaCensusList[indiaCensusList.length - 1].state;
+        else
+            return usCensusList[usCensusList.length - 1].state;
     }
 }
 
