@@ -37,8 +37,9 @@ public class CensusAnalyserTest {
     public void givenIndianStateCensusCSVFile_ShouldReturnsCorrectRecords() {
         try {
             int numOfRecords = censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
-            Assert.assertEquals(29,numOfRecords);
-        } catch (CensusAnalyserException e) { }
+            Assert.assertEquals(29, numOfRecords);
+        } catch (CensusAnalyserException e) {
+        }
     }
 
     @Test
@@ -94,7 +95,7 @@ public class CensusAnalyserTest {
         try {
             censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
             int numOfRecords = censusAnalyser.loadIndiaStateCode(INDIA_STATE_CODE_CSV_PATH);
-            Assert.assertEquals(29,numOfRecords);
+            Assert.assertEquals(29, numOfRecords);
         } catch (CensusAnalyserException e) {
             e.printStackTrace();
         }
@@ -244,8 +245,9 @@ public class CensusAnalyserTest {
     public void givenUSCensusCSVFile_ShouldReturnsCorrectRecords() {
         try {
             int numOfRecords = censusAnalyser.loadUSCensusData(US_CSV_FILE_PATH);
-            Assert.assertEquals(51,numOfRecords);
-        } catch (CensusAnalyserException e) { }
+            Assert.assertEquals(51, numOfRecords);
+        } catch (CensusAnalyserException e) {
+        }
     }
 
     @Test
@@ -288,12 +290,12 @@ public class CensusAnalyserTest {
 
     @Test
     public void givenUSCensusData_WhenSortedOnDensity_ShouldReturnSortedResult() {
-        String sortedCensusData = null;
+        String sortedCensusData;
         try {
             censusAnalyser.loadUSCensusData(US_CSV_FILE_PATH);
             sortedCensusData = censusAnalyser.getDensityWiseSortedCensusDataForUS(US_CSV_FILE_PATH);
             USCensusCSV[] censusCSV = new Gson().fromJson(sortedCensusData, USCensusCSV[].class);
-            Assert.assertEquals((Double)3805.61, censusCSV[censusCSV.length - 1].populationDensity);
+            Assert.assertEquals((Double) 3805.61, censusCSV[censusCSV.length - 1].populationDensity);
         } catch (CensusAnalyserException e) {
             e.printStackTrace();
         }
@@ -301,12 +303,12 @@ public class CensusAnalyserTest {
 
     @Test
     public void givenUSCensusData_WhenSortedOnArea_ShouldReturnSortedResult() {
-        String sortedCensusData = null;
+        String sortedCensusData;
         try {
             censusAnalyser.loadUSCensusData(US_CSV_FILE_PATH);
             sortedCensusData = censusAnalyser.getAreaWiseSortedCensusDataForUS(US_CSV_FILE_PATH);
             USCensusCSV[] censusCSV = new Gson().fromJson(sortedCensusData, USCensusCSV[].class);
-            Assert.assertEquals((Double)1723338.01, censusCSV[censusCSV.length - 1].totalArea);
+            Assert.assertEquals((Double) 1723338.01, censusCSV[censusCSV.length - 1].totalArea);
         } catch (CensusAnalyserException e) {
             e.printStackTrace();
         }
@@ -320,6 +322,17 @@ public class CensusAnalyserTest {
             censusAnalyser.loadUSCensusData(US_CSV_WRONG_DELIMITER);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.type);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenCensusData_ShouldReturnMostPopulationDensityState() {
+        String mostPopulationDensity;
+        try {
+            mostPopulationDensity = censusAnalyser.getHighestPopulationDensityStateFromIndiaAndUS(INDIA_CENSUS_CSV_FILE_PATH, US_CSV_FILE_PATH);
+            Assert.assertEquals("District of Columbia", mostPopulationDensity);
+        } catch (CensusAnalyserException e) {
             e.printStackTrace();
         }
     }

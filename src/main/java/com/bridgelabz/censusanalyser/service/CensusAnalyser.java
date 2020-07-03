@@ -197,6 +197,12 @@ public class CensusAnalyser {
         return sortedCensusData;
     }
 
+    /**
+     *
+     * @param usCsvFilePath
+     * @return
+     * @throws CensusAnalyserException
+     */
     public String getPopulationWiseSortedCensusDataForUS(String usCsvFilePath) throws CensusAnalyserException {
         loadUSCensusData(usCsvFilePath);
         if (csvFileMap == null || csvFileMap.size() == 0) {
@@ -209,6 +215,12 @@ public class CensusAnalyser {
         return sortedCensusData;
     }
 
+    /**
+     *
+     * @param usCsvFilePath
+     * @return
+     * @throws CensusAnalyserException
+     */
     public String getStateWiseSortedCensusDataForUS(String usCsvFilePath) throws CensusAnalyserException {
         loadUSCensusData(usCsvFilePath);
         if (csvFileMap == null || csvFileMap.size() == 0) {
@@ -221,6 +233,12 @@ public class CensusAnalyser {
         return sortedCensusData;
     }
 
+    /**
+     *
+     * @param usCsvFilePath
+     * @return
+     * @throws CensusAnalyserException
+     */
     public String getDensityWiseSortedCensusDataForUS(String usCsvFilePath) throws CensusAnalyserException {
         loadUSCensusData(usCsvFilePath);
         if (csvFileMap == null || csvFileMap.size() == 0) {
@@ -233,6 +251,12 @@ public class CensusAnalyser {
         return sortedCensusData;
     }
 
+    /**
+     *
+     * @param usCsvFilePath
+     * @return
+     * @throws CensusAnalyserException
+     */
     public String getAreaWiseSortedCensusDataForUS(String usCsvFilePath) throws CensusAnalyserException {
         loadUSCensusData(usCsvFilePath);
         if (csvFileMap == null || csvFileMap.size() == 0) {
@@ -245,6 +269,13 @@ public class CensusAnalyser {
         return sortedCensusData;
     }
 
+    /**
+     *
+     * @param indiaCsvFilePath
+     * @param usCsvFilePath
+     * @return
+     * @throws CensusAnalyserException
+     */
     public String getHighestPopulationDensityStateFromIndiaAndUS(String indiaCsvFilePath, String usCsvFilePath)
             throws CensusAnalyserException
     {
