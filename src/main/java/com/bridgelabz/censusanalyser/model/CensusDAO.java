@@ -7,18 +7,18 @@ public class CensusDAO {
     public double totalArea;
     public double populationDensity;
 
-    public CensusDAO(IndiaStateCensusCSV next) {
-        populationDensity = next.populationDensity;
-        totalArea = next.totalArea;
-        population = next.population;
-        state = next.state;
+    public CensusDAO(IndiaStateCensusCSV indiaStateCensusCSV) {
+        populationDensity = indiaStateCensusCSV.populationDensity;
+        totalArea = indiaStateCensusCSV.totalArea;
+        population = indiaStateCensusCSV.population;
+        state = indiaStateCensusCSV.state;
     }
 
-    public CensusDAO(USCensusCSV next) {
-        state = next.state;
-        population = next.population;
-        totalArea = next.totalArea;
-        populationDensity = next.populationDensity;
-        stateCode = next.StateId;
+    public CensusDAO(USCensusCSV usCensusCSV) {
+        state = usCensusCSV.state;
+        population = usCensusCSV.population;
+        totalArea = usCensusCSV.totalArea;
+        populationDensity = usCensusCSV.populationDensity;
+        stateCode = usCensusCSV.StateId;
     }
 }
