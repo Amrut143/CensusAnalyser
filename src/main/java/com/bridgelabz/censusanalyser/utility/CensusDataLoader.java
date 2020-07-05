@@ -21,13 +21,6 @@ import java.util.stream.StreamSupport;
 
 public class CensusDataLoader {
 
-    Map<String, CensusDAO> censusStateMap = null;
-
-    public CensusDataLoader() {
-
-        censusStateMap = new HashMap<>();
-    }
-
     /**
      * Function to load country census data
      *
@@ -55,15 +48,18 @@ public class CensusDataLoader {
      * @throws CensusAnalyserException
      */
     private <E> Map<String, CensusDAO> loadCensusData(Class<E> censusCSVClass, String... csvFilePath) throws CensusAnalyserException {
+        Map<String, CensusDAO> censusStateMap = new HashMap<>();
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath[0]))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             Iterator<E> csvIterator = csvBuilder.getCSVFileIterator(reader, censusCSVClass);
             Iterable<E> censusCSVIterable = () -> csvIterator;
-            if (censusCSVClass.getSimpleName().equals("IndiaStateCensusCSV")) {
+            String className = censusCSVClass.getSimpleName();
+            switch (className) {
+                case "IndiaStateCensusCSV":
                 StreamSupport.stream(censusCSVIterable.spliterator(), false)
                         .map(IndiaStateCensusCSV.class::cast)
                         .forEach(censusCSV -> censusStateMap.put(censusCSV.state, new CensusDAO(censusCSV)));
-            } else if (censusCSVClass.getSimpleName().equals("USCensusCSV")) {
+                case "USCensusCSV":
                 StreamSupport.stream(censusCSVIterable.spliterator(), false)
                         .map(USCensusCSV.class::cast)
                         .forEach(censusCSV -> censusStateMap.put(censusCSV.state, new CensusDAO(censusCSV)));

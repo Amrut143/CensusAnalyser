@@ -1,5 +1,7 @@
 package com.bridgelabz.censusanalyser.model;
 
+import com.bridgelabz.censusanalyser.service.CensusAnalyser;
+
 public class CensusDAO {
     public String state;
     public String stateCode;
@@ -8,8 +10,8 @@ public class CensusDAO {
     public double populationDensity;
 
     public CensusDAO(IndiaStateCensusCSV indiaStateCensusCSV) {
-        populationDensity = indiaStateCensusCSV.populationDensity;
-        totalArea = indiaStateCensusCSV.totalArea;
+        populationDensity = indiaStateCensusCSV.densityPerSqKm;
+        totalArea = indiaStateCensusCSV.areaInSqKm;
         population = indiaStateCensusCSV.population;
         state = indiaStateCensusCSV.state;
     }
@@ -20,5 +22,11 @@ public class CensusDAO {
         totalArea = usCensusCSV.totalArea;
         populationDensity = usCensusCSV.populationDensity;
         stateCode = usCensusCSV.StateId;
+    }
+
+    public Object getCensusData(CensusAnalyser.Country country) {
+        if (country.equals(CensusAnalyser.Country.US))
+            return new USCensusCSV(state, stateCode, population, populationDensity, totalArea);
+        return new IndiaStateCensusCSV(state, population, (int) populationDensity, (int) totalArea);
     }
 }
