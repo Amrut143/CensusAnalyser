@@ -21,10 +21,15 @@ public class SortByField {
      */
     public static Comparator getParameter(Parameter parameter) {
 
-        censusSortMap.put(Parameter.STATE, Comparator.comparing(census -> census.state));
-        censusSortMap.put(Parameter.POPULATION, Comparator.comparing(census -> census.totalArea));
-        censusSortMap.put(Parameter.AREA, Comparator.comparing(census -> census.population));
-        censusSortMap.put(Parameter.DENSITY, Comparator.comparing(census -> census.populationDensity));
+        Comparator<CensusDAO> stateComparator = Comparator.comparing(census -> census.state);
+        Comparator<CensusDAO> populationComparator = Comparator.comparing(census -> census.population);
+        Comparator<CensusDAO> areaComparator = Comparator.comparing(census -> census.totalArea);
+        Comparator<CensusDAO> densityComparator = Comparator.comparing(census -> census.populationDensity);
+
+        censusSortMap.put(Parameter.STATE, stateComparator);
+        censusSortMap.put(Parameter.POPULATION, populationComparator);
+        censusSortMap.put(Parameter.AREA, areaComparator);
+        censusSortMap.put(Parameter.DENSITY, densityComparator);
 
         Comparator<CensusDAO> comparator = censusSortMap.get(parameter);
 
