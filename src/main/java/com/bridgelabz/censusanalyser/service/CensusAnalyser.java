@@ -1,12 +1,16 @@
 package com.bridgelabz.censusanalyser.service;
 
-import com.bridgelabz.censusanalyser.model.CensusDAO;
-import com.bridgelabz.censusanalyser.utility.CensusDataLoader;
+import com.bridgelabz.censusanalyser.adapter.CensusAdapterFactory;
+import com.bridgelabz.censusanalyser.dao.CensusDAO;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
+import com.bridgelabz.censusanalyser.utility.Country;
 import com.bridgelabz.censusanalyser.utility.SortByField;
 import com.google.gson.Gson;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -14,10 +18,6 @@ import java.util.stream.Collectors;
  * Purpose : Analyse the census data for country and perform sort operation
  */
 public class CensusAnalyser {
-
-    public enum Country {
-        INDIA, US;
-    }
 
     private Country country;
     Map<String, CensusDAO> csvFileMap;
@@ -29,19 +29,20 @@ public class CensusAnalyser {
     public CensusAnalyser() {
         this.csvFileMap = new HashMap<>();
     }
+
     /**
      * Function to load the country census data from csv file
+     *
      * @param csvFilePath
      * @return
      * @throws CensusAnalyserException
      */
     public int loadCountryCensusData(String... csvFilePath) throws CensusAnalyserException {
-        csvFileMap = new CensusDataLoader().loadCensusData(country, csvFilePath);
+        csvFileMap = new CensusAdapterFactory().getCensusData(country, csvFilePath);
         return csvFileMap.size();
     }
 
     /**
-     *
      * @param parameter
      * @return
      * @throws CensusAnalyserException
@@ -54,21 +55,20 @@ public class CensusAnalyser {
         Comparator<CensusDAO> censusComparator = SortByField.getParameter(parameter);
         ArrayList censusDAOList = csvFileMap.values().stream()
                 .sorted(censusComparator)
-                .map(censusDAO -> censusDAO.getCensusData(country))
+                .map(censusDAO -> censusDAO.getCensusDTOS(country))
                 .collect(Collectors.toCollection(ArrayList::new));
         String sortedStateCensusJson = new Gson().toJson(censusDAOList);
         return sortedStateCensusJson;
     }
 
     /**
-     *
      * @return
      * @throws CensusAnalyserException
      */
-    public String getHighestPopulationDensityStateFromIndiaAndUS() throws CensusAnalyserException {
-        loadCountryCensusData("./src/test/resources/IndiaStateCensusData.csv");
+    public String getHighestPopulationDensityStateFromIndiaAndUS(String... csvFilePath) throws CensusAnalyserException {
+        this.loadCountryCensusData(csvFilePath[0]);
         CensusDAO[] indiaCensusList = new Gson().fromJson(this.getSortedCensusDataBasedOnField(SortByField.Parameter.DENSITY), CensusDAO[].class);
-        loadCountryCensusData("./src/test/resources/IndiaStateCensusData.csv");
+        this.loadCountryCensusData(csvFilePath[1]);
         CensusDAO[] usCensusList = new Gson().fromJson(this.getSortedCensusDataBasedOnField(SortByField.Parameter.DENSITY), CensusDAO[].class);
         if (Double.compare(indiaCensusList[indiaCensusList.length - 1].populationDensity, usCensusList[usCensusList.length - 1].populationDensity) > 0)
             return indiaCensusList[indiaCensusList.length - 1].state;
