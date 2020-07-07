@@ -1,5 +1,6 @@
 package com.bridgelabz.censusanalyser.service;
 
+import com.bridgelabz.censusanalyser.adapter.CensusAdapter;
 import com.bridgelabz.censusanalyser.adapter.CensusAdapterFactory;
 import com.bridgelabz.censusanalyser.dao.CensusDAO;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
@@ -37,7 +38,7 @@ public class CensusAnalyser {
      * @return
      * @throws CensusAnalyserException
      */
-    public int loadCountryCensusData(String... csvFilePath) throws CensusAnalyserException {
+    public int loadCountryCensusData(Country country, String... csvFilePath) throws CensusAnalyserException {
         csvFileMap = new CensusAdapterFactory().getCensusData(country, csvFilePath);
         return csvFileMap.size();
     }
@@ -66,9 +67,9 @@ public class CensusAnalyser {
      * @throws CensusAnalyserException
      */
     public String getHighestPopulationDensityStateFromIndiaAndUS(String... csvFilePath) throws CensusAnalyserException {
-        this.loadCountryCensusData(csvFilePath[0]);
+        this.loadCountryCensusData(Country.INDIA, csvFilePath[0], csvFilePath[1]);
         CensusDAO[] indiaCensusList = new Gson().fromJson(this.getSortedCensusDataBasedOnField(SortByField.Parameter.DENSITY), CensusDAO[].class);
-        this.loadCountryCensusData(csvFilePath[1]);
+        this.loadCountryCensusData(Country.US, csvFilePath[2]);
         CensusDAO[] usCensusList = new Gson().fromJson(this.getSortedCensusDataBasedOnField(SortByField.Parameter.DENSITY), CensusDAO[].class);
         if (Double.compare(indiaCensusList[indiaCensusList.length - 1].populationDensity, usCensusList[usCensusList.length - 1].populationDensity) > 0)
             return indiaCensusList[indiaCensusList.length - 1].state;
