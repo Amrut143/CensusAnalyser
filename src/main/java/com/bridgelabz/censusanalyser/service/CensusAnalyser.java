@@ -20,8 +20,9 @@ import java.util.stream.Collectors;
  */
 public class CensusAnalyser {
 
-    private Country country;
     Map<String, CensusDAO> csvFileMap;
+    private CensusAdapter censusAdapter;
+    private Country country;
 
     public CensusAnalyser(Country country) {
         this.country = country;
@@ -29,6 +30,10 @@ public class CensusAnalyser {
 
     public CensusAnalyser() {
         this.csvFileMap = new HashMap<>();
+    }
+
+    public void setCensusAdapter(CensusAdapter censusAdapter) {
+        this.censusAdapter = censusAdapter;
     }
 
     /**
