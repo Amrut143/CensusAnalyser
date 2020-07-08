@@ -64,7 +64,7 @@ public class CensusAnalyserTestWithMockito {
     public void givenIndiaCensusCSVFile_ShouldReturnCorrectRecords() {
         try {
             CensusAdapter censusAdapter = mock(IndiaCensusAdapter.class);
-            when(censusAdapter.loadCensusData(Country.INDIA, INDIA_CENSUS_CSV_FILE_PATH)).thenReturn(this.censusDAOMap);
+            when(censusAdapter.loadCensusData(Country.INDIA, INDIA_CENSUS_CSV_FILE_PATH, INDIA_STATE_CODE_CSV_PATH)).thenReturn(this.censusDAOMap);
             CensusAnalyser censusAnalyser = new CensusAnalyser(Country.INDIA);
             censusAnalyser.setCensusAdapter(censusAdapter);
             int censusRecords = censusAnalyser.loadCountryCensusData(Country.INDIA, INDIA_CENSUS_CSV_FILE_PATH, INDIA_STATE_CODE_CSV_PATH);
@@ -92,7 +92,7 @@ public class CensusAnalyserTestWithMockito {
     public void givenIndiaCensusData_WhenSortedPopulation_ShouldReturnCorrectDesiredSortedData() {
         try {
             CensusAdapter censusAdapter = mock(IndiaCensusAdapter.class);
-            when(censusAdapter.loadCensusData(Country.INDIA, INDIA_CENSUS_CSV_FILE_PATH)).thenReturn(this.censusDAOMap);
+            when(censusAdapter.loadCensusData(Country.INDIA, INDIA_CENSUS_CSV_FILE_PATH, INDIA_STATE_CODE_CSV_PATH)).thenReturn(this.censusDAOMap);
             CensusAnalyser censusAnalyser = new CensusAnalyser(Country.INDIA);
             censusAnalyser.setCensusAdapter(censusAdapter);
             censusAnalyser.loadCountryCensusData(Country.INDIA, INDIA_CENSUS_CSV_FILE_PATH, INDIA_STATE_CODE_CSV_PATH);
